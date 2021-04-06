@@ -39,7 +39,7 @@ url = "/"
 [[menu.main]]
 name = "About"
 weight = 0
-identifier = "contact" # this button will refer to a markdown file named "contact" in the content folder
+identifier = "contact"
 pre = "<br />"
 url = "/about"
 
