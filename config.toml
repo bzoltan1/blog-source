@@ -10,15 +10,14 @@ Copyright = "© Zoltán Balogh 2021"
 canonifyurls = true
 pygmentsCodeFences = true
 pygmentsUseClasses = true
+metaDataFormat = "yaml"
 
 [params]
 description = "Recorded ignorance"
 authorlocation = "authorlocation"
 cover = "static/cover.png"
-## save the image you want to use as background picture in directory "./static/images"author = "author name"(delete this line when editing)
 logo = "avatar.png"
 favicon = "avatar.png"
-## save the image you want to use as website logo in directory "./static/images"(delete this line when editing)
 githubName = "bzoltan1"
 linkedinName = "zbalogh"
 email = "zoltan.balogh@suse.com"
@@ -29,10 +28,9 @@ name = "Zoltán Balogh"
 github = "bzoltan1"
 linkedin = "zbalogh"
 
-
-[[menu.main]]  # here are the buttons on the menu
-name = "Home" # Button will display as "Home"
-weight = 100 # the weight decides the position of the button (higher or lower)
+[[menu.main]]  
+name = "Home" 
+weight = 100 
 identifier = "home"
 pre = "<br />"
 url = "/"
@@ -53,8 +51,6 @@ weight = 1
 name = "Tags"
 url = "tags"
 weight = 3
-
-
 
 [permalinks]
 post = "/:slug/"
