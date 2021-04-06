@@ -1,3 +1,63 @@
-baseURL = "http://example.org/"
+baseurl = "https://bzoltan1.github.io/"
+contentdir    = "content"
+layoutdir     = "layouts"
+publishdir    = "public"
+theme = "beautifulhugo"
 languageCode = "en-us"
-title = "My New Hugo Site"
+title = "Zoltán's Blog"
+paginate = 2
+Copyright = "© Zoltán Balogh 2021"
+canonifyurls = true
+pygmentsCodeFences = true
+pygmentsUseClasses = true
+
+[params]
+description = "Recorded ignorance"
+authorlocation = "authorlocation"
+cover = "static/cover.png"
+## save the image you want to use as background picture in directory "./static/images"author = "author name"(delete this line when editing)
+logo = "avatar.png"
+## save the image you want to use as website logo in directory "./static/images"(delete this line when editing)
+githubName = "bzoltan1"
+linkedinName = "zbalogh"
+email = "zoltan.balogh@suse.com"
+hideHUGOSupport = false
+
+[Author]
+name = "Zoltán Balogh"
+github = "bzoltan1"
+linkedin = "zbalogh"
+
+
+[[menu.main]]  # here are the buttons on the menu
+name = "Home" # Button will display as "Home"
+weight = 100 # the weight decides the position of the button (higher or lower)
+identifier = "home"
+pre = "<br />"
+url = "/"
+
+[[menu.main]]
+name = "About"
+weight = 0
+identifier = "contact" # this button will refer to a markdown file named "contact" in the content folder
+pre = "<br />"
+url = "/about"
+
+[[menu.main]]
+name = "Blog"
+url = ""
+weight = 1
+
+[[menu.main]]
+name = "Tags"
+url = "tags"
+weight = 3
+
+
+
+[permalinks]
+post = "/:slug/"
+[sitemap]
+ChangeFreq = ""
+Filename = "sitemap.xml"
+Priority = "-1"
