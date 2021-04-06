@@ -19,43 +19,46 @@ Account on GitHub [https://github.com/bzoltan1/](https://github.com/bzoltan1/)
 
 Git client installed
 
-`$ sudo zypper install git-core`
+```bash
+sudo zypper install git-core
+```
 
 hugo application installed
 
-`$ sudo zypper install hugo`
+```bash
+sudo zypper install hugo
+```
 
 ### Create and configure the hugo page and source repository
 
 To start I have created the draft page source with hugo and pulled in the beautifulhugo theme as submodule.
 
-`$ hugo new site blog-source  `
-
-`$ cd blog-source  `
-
-`$ git init `
-
-`$ git submodule add https://github.com/halogenica/beautifulhugo.git themes/beautifulhugo`
+```bash
+hugo new site blog-source
+cd blog-source
+git init
+git submodule add https://github.com/halogenica/beautifulhugo.git themes/beautifulhugo
+```
 
 At that point I used the instructions ([https://kalikiana.gitlab.io/post/2021-02-12-setup-gitlab-pages-blog-with-hugo/](https://kalikiana.gitlab.io/post/2021-02-12-setup-gitlab-pages-blog-with-hugo/)) from Chris and even used his config.tml ([https://gitlab.com/kalikiana/kalikiana.gitlab.io/-/blob/master/config.toml](https://gitlab.com/kalikiana/kalikiana.gitlab.io/-/blob/master/config.toml)) as template to create mine.
 
 It is really easy to test drive locally the website by running the hugo server
 
-`$ hugo server`
+```bash
+hugo server
+```
 
 and open [http://localhost:1313/](http://localhost:1313/) in the browser. I simple opened an other terminal and adjusted, extended the source tree and refreshed the page in the browswer. As long the hugo server is running it will watch the source tree.
 
 After I was happy with the initial state of the website I have pushed the code to the source repository
 
-`$ branch -M main  `
-
-`$ git remote add origin git@github.com:bzoltan1/blog-source.git`
-
-`$ git add .  `
-
-`$ git commit -m "Initial commit" -a  `
-
-`$ git push -u origin main`
+```bash
+branch -M main
+git remote add origin git@github.com:bzoltan1/blog-source.git
+git add .
+git commit -m "Initial commit" -a
+git push -u origin main
+```
 
 ### Create and configure the GitHub page
 
@@ -65,7 +68,9 @@ As I am going to automatically deploy the website from one repository to the oth
 
 First I created a private/public key pair
 
-`$ ssh-keygen -t rsa -b 4096 -C "$(GIT USER EMAIL)" -f master -N ""`
+```bash
+$ ssh-keygen -t rsa -b 4096 -C "$(GIT USER EMAIL)" -f master -N ""
+```
 
 It will create the master/master.pub key pair.
 
@@ -73,7 +78,7 @@ I have added the private key as a secret to the hugo source repository
 
 In my case here [https://github.com/bzoltan1/blog-source/settings/secrets/actions](https://github.com/bzoltan1/blog-source/settings/secrets/actions)
 
-The place on GitHub is the Repository -_\> Settings > Secrets > Add new secrets_and the name the secret I set ACTIONS\_DEPLOY\_KEY and pasted the contents of`master`file in the value.
+The place on GitHub is the Repository -> Settings -> Secrets -> Add new secrets and the name the secret I set ACTIONS\DEPLOY\KEY and pasted the contents of `master` file in the value.
 
 Then added the public key as deployment key in the GitHub pages repository
 
@@ -90,7 +95,7 @@ I went to the Actions section in the source repository here [https://github.com
 The action will be stored in a yaml file under the source tree .github/workflows/ folder: [https://github.com/bzoltan1/blog-source/blob/main/.github/workflows/pages.yml](https://github.com/bzoltan1/blog-source/blob/main/.github/workflows/pages.yml)
 
 I paste here the action yaml file:
-```
+```yaml
 name: hugo publish
 
 on:
@@ -134,26 +139,28 @@ As I am using the beautifulhugo theme as submodule, it is necessary to tell the 
 
 There are several good ways to create new content. I prefer to use the native hugo way in command line
 
-`$ hugo new posts/\[YYYY-MM-DD\]-\[TITLE\].md`
+```bash
+$ hugo new posts/\[YYYY-MM-DD\]-\[TITLE\].md
+```
 
 Then I  simple edited the created markdown file with vi and fixed the header to have nice tags and changed the "draft:true" to "type: post"
 
-```
+```yaml
 ---  
-title: "2021 04 05 Setup a Blog With Github Pages and Hugo"  
+title: "Setup a Blog With Github Pages and Hugo"  
 date: 2021-04-05T19:36:57+03:00  
-tags: \["hugo", "github", "workflow", "pages","website","opensuse"\]  
+tags: ["hugo", "github", "workflow", "pages","website","opensuse"]  
 type: post  
 ---
 ```
 
 After I have edited the markdown file, all I needed to to do is committing and pushing the code to the source repository and let the GitHub CI do its job. 
 
-`$ git add post/2021-04-05-setup-a-blog-with-github-pages-and-hugo.md`
-
-`$ git commit -m "New blog post" post/2021-04-05-setup-a-blog-with-github-pages-and-hugo.md`
-
-`$ git push`
+```bash
+$ git add post/2021-04-05-setup-a-blog-with-github-pages-and-hugo.md
+$ git commit -m "New blog post" post/2021-04-05-setup-a-blog-with-github-pages-and-hugo.md
+$ git push
+```
 
 ### What's next?
 
