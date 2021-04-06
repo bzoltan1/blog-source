@@ -17,6 +17,7 @@ authorlocation = "authorlocation"
 cover = "static/cover.png"
 ## save the image you want to use as background picture in directory "./static/images"author = "author name"(delete this line when editing)
 logo = "avatar.png"
+favicon = "avatar.png"
 ## save the image you want to use as website logo in directory "./static/images"(delete this line when editing)
 githubName = "bzoltan1"
 linkedinName = "zbalogh"
