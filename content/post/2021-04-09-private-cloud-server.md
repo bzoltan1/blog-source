@@ -189,7 +189,7 @@ And the  array of the trusted domains should be fixed too
 ```  
 'trusted_domains' =>  
     array (  
-        0 => '[nas.nokedli.org](http://nas.nokedli.org)',  
+        0 => 'nas.nokedli.org',  
         1 => 'nas.nokedli.local',  
     ),  
 ```
