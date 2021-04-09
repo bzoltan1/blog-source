@@ -18,7 +18,7 @@ I guess it is hardly a surprise that my choice is openSUSE. I was hesitating to 
 *   A fairly mature ASUS P8H77-M Pro motherboard with
 *   core i5-3550 CPU @ 3.30GHz and
 *   16GB of RAM.
-*   The disk system would be the same as in Synology, a 4 \* Western Digital NAS grade Red 3T  SATA RAID5 where one disk is a dedicated hot spare.
+*   The disk system would be the same as in Synology, a 4 * Western Digital NAS grade Red 3T  SATA RAID5 where one disk is a dedicated hot spare.
 
 ### The plan 
 
@@ -36,7 +36,7 @@ I guess it is hardly a surprise that my choice is openSUSE. I was hesitating to 
 
 I have downloaded the installation media from the official place [http://download.opensuse.org/distribution/leap/15.3/iso/](http://download.opensuse.org/distribution/leap/15.3/iso/)
 
-I very seldom use any other tool than the good old `dd` command  to create a USB boot stick, but this time I wanted to try out something fancy. So I installed the imagewriter app, what is a graphical utility for writing raw disk images & hybrid ISOs to USB keys. I just opened the app and dragged the `openSUSE-Leap-15.3-NET-x86\_64-Build91.1-Media.iso` from the file manager to the app and plugged in an USB stick. I have quickly configured the server's BIOS to enable it booting from USB and that was it. Installing the Leap 15.3 was a pretty boring, straight forward, next-next-finish job.
+I very seldom use any other tool than the good old `dd` command  to create a USB boot stick, but this time I wanted to try out something fancy. So I installed the imagewriter app, what is a graphical utility for writing raw disk images & hybrid ISOs to USB keys. I just opened the app and dragged the `openSUSE-Leap-15.3-NET-x86_64-Build91.1-Media.iso` from the file manager to the app and plugged in an USB stick. I have quickly configured the server's BIOS to enable it booting from USB and that was it. Installing the Leap 15.3 was a pretty boring, straight forward, next-next-finish job.
 
 ### Softrawe RAID
 
@@ -176,7 +176,7 @@ After some debugging I came to realize that I need to convince the apparmor to 
 
 Installing NextCloud is not a short process, but still fairly simple and straight forward as the openSUSE documentation is complete. I just followed the instructions step by step.
 
-[https://en.opensuse.org/SDB:LAMP\_setup](https://en.opensuse.org/SDB:LAMP_setup)
+[https://en.opensuse.org/SDB:LAMP_setup](https://en.opensuse.org/SDB:LAMP_setup)
 
 [https://en.opensuse.org/SDB:Nextcloud](https://en.opensuse.org/SDB:Nextcloud)
 
@@ -187,7 +187,7 @@ Also since I am using secure http the `/srv/www/htdocs/nextcloud/config/config.
 And the  array of the trusted domains should be fixed too
 
 ```  
-'trusted\_domains' =>  
+'trusted_domains' =>  
     array (  
         0 => '[nas.nokedli.org](http://nas.nokedli.org)',  
         1 => 'nas.nokedli.local',  
