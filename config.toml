@@ -5,7 +5,6 @@ publishdir    = "public"
 theme = "beautifulhugo"
 languageCode = "en-us"
 title = "Zoltán's Blog"
-googleAnalytics = "UA-7191182-2"
 paginate = 20
 Copyright = "© Zoltán Balogh 2021"
 canonifyurls = true
