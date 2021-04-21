@@ -162,7 +162,7 @@ Important to note that Let's Encrypt certificates are only valid for 90 days. S
 HAProxy needs an ssl-certificate to be one file, in a certain format. To do that, I simple dump the certificates from Let's Encrypt to a single file
 
 ```
-bash -c "cd /etc/letsencrypt/live/nas.nokedli.org/ && cat fullchain.pem privkey.pem > /etc/ssl/nas.nokedli.org/nas.nokedli.org.pem"
+bash -c "mkdir -p /etc/ssl/nas.nokedli.org/ && cd /etc/letsencrypt/live/nas.nokedli.org/ && cat fullchain.pem privkey.pem > /etc/ssl/nas.nokedli.org/nas.nokedli.org.pem"
 ```
 
 After that I needed one more thing. This is something what wasted several hours of my life as haproxy was complaining about not being able to load SSL private key from PEM file.
