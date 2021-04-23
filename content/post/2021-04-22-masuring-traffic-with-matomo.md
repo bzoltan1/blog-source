@@ -164,3 +164,18 @@ And then replace the script in the head.html to this
 ```
  
 What I am not happy with is that I need to use the [https://matomo.nokedli.org/index.php](https://matomo.nokedli.org/index.php) address with the `index.php` even if the `.htaccess` and the vhost configuration is configured to default to the index.php. My assumption is that there is access permission problem when the application's root is outside of the apache's webroot. I wonder why matomo is installed to the `/srv/www/` instead of the more appropriate `/srv/www/htdocs/`. I could be very wrong here, if somebody knows the solution please get in touch with me.
+
+**UPDATE on 23.04**
+
+Thanks for the help of [Jan Bayer](https://github.com/baierjan) we managed to figure out what caused the problem of accessing the root of the matomo. The `.htaccess` was  unnecessary and actually the root of the application was not the root :) cause of the problem.
+
+The solution was to add to the VirtualHost section in the  `/etc/apache2/vhosts.d/matomo.conf` file the following section
+
+```xml
+ <Location "/">
+    Require all granted
+ </Location>
+```
+
+Most likely there was a conflict with an other webapp provided by the same web server what includes configuration snippets which affects global settings. Apache has a very complex configuration system. No wonder that it is safer and easier to deploy and maintain containerized webapps.
+
