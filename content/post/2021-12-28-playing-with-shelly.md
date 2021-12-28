@@ -61,13 +61,13 @@ I also need to install the client applications. Note that it does not need to be
 
 Now I need to discover my MQTT enabled Shelly device(s) on my LAN. I love single purpose oneliners:
 
-```bash
+```
 for IP in $(arp-scan 192.168.1.0/24 --plain|awk '{print $1}'); do curl -s http://$IP/status |python -m json.tool 2>&1|grep -v No|egrep "\"ip|\"mqtt\"" -A1|egrep -v "\-\-|rssi"; done
 ```
 
 Once I found the IP address of my Shelly lamp I can ask it for the settings details:
 
-```bash
+```
 curl -s http://192.168.1.122/settings|python -m json.tool
 ```
 It tells me for example that the mqtt id of my lamp is ShellyBulbDuo-E8DB84A9E51B.
@@ -84,13 +84,13 @@ $ export MQTT_PW = “shelly”
 $ export DEVICE_ID = “ShellyBulbDuo-E8DB84A9E51B”
 ```
 
-```bash
+```
 mosquitto_pub -h ${MQTT_SERVER} -p ${MQTT_PORT} -u ${MQTT_USER} -P ${MQTT_PW} -t shellies/${DEVICE_ID}/light/0/set  -m '{"brightness":33, "white": 0, "temp": 2700, "turn": "on", "transition": 2000 }'
 ```
 
 One handy command I have learned about is to subscribe to all announcements and figure out more about the mqtt devices, topics and properties.
 
-```bash
+```
 mosquitto_sub -h ${MQTT_SERVER} -p ${MQTT_PORT} -u ${MQTT_USER} -P ${MQTT_PW} -t '#' -v
 ```
 
