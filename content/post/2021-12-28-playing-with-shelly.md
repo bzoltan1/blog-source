@@ -1,5 +1,5 @@
 ---
-title: "Playing with Shally"
+title: "Playing with Shelly"
 subtitle: "Finally I can turn on the lights from CLI"
 date: 2021-12-28T10:35:50+03:00
 tags: ["mqtt", "shelly", "iot", "mosquitto","opensuse"]
