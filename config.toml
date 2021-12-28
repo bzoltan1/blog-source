@@ -25,8 +25,10 @@ hideHUGOSupport = false
 
 [Author]
 name = "Zoltán Balogh"
+email = "zoltan.balogh@suse.com"
 github = "bzoltan1"
 linkedin = "zbalogh"
+
 
 [[menu.main]]  
 name = "Home" 
