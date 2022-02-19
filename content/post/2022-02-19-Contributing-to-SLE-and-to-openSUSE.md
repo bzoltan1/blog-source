@@ -19,7 +19,7 @@ Naturally I receive an email notification from Bugzilla about the issue. That is
 As start I branch the codebase I am  going to work on. In my particular case it is the SUSE:SLE-15:Update, but it could be the openSUSE:Factory as well.
 
 ```
- osc -A https://api.suse.de branch -m 'Fixing #1195126 - CVE-2022-0351: vim: uncontrolled recursion in eval7().' SUSE:SLE-15:Update vim
+osc -A https://api.suse.de branch -m 'Fixing #1195126 - CVE-2022-0351: vim: uncontrolled recursion in eval7().' SUSE:SLE-15:Update vim
 ```
 
 ```
