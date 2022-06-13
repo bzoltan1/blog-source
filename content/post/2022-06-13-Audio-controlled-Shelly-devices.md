@@ -26,6 +26,7 @@ git clone https://github.com/alphacep/vosk-api
 
 My goal was to control the Shelly lights in my home with voice control.
 
+
 ### Some words about API design
 
 Now, when it comes to Shelly Cloud API it becomes obviously visible what is a different a poorly done API and a well done API.
@@ -101,11 +102,15 @@ First of all, it is super cool that speech recognition is available in the open 
 
 Also with a privacy safe voice controlling system we can build cool accessibility and emergency applications.
 
-{{< rawhtml >}} 
+### The proof
 
-<video width=100% controls autoplay>
+A friend of mine was laughing when I was giving them a demo that the video does not show me switching on and off the physical light switch :)
+I guess you need to trust me with this.
+
+{{< rawhtml >}}
+
+<video width=100% controls>
     <source src="/vosk-shelley.mp4" type="video/mp4">
-    Your browser does not support the video tag.  
+    Your browser does not support the video tag.
 </video>
 
-{{< /rawhtml >}}
