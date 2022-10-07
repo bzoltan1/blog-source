@@ -68,8 +68,8 @@ In the  `/etc/influxdb/config.toml` I have changed the value of auth-enabled fro
   # Determines whether user authentication is enabled over HTTP/HTTPS.
   auth-enabled = true
 ...
-Save and close the file. Next, restart the influxdb service to load the new security setting.
 ```
+Save and close the file. Next, restart the influxdb service to load the new security setting.
 
 ```
 sudo systemctl restart influxdb
