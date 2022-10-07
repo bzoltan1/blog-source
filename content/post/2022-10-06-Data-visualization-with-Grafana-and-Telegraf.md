@@ -55,7 +55,7 @@ zypper install influxdb
 systemctl start influxdb
 systemctl status influxdb
 systemctl enable grafana-server
-````
+```
 
 At this point I refused to be the victim of the "everything must be configured with a web UI movement" so I have not even touched the InfluxDB web UI. Most likely this part is necessary if somebody wants to use InfluxDB for a more complex use case.  But I knew that I all need is feeding the database with simple records in time series.
 
@@ -123,7 +123,7 @@ The `/etc/telegraf/scripts/load.sh` is a simple oneliner to return cpu, memory a
 ```
 #!/bin/bash
 echo "load,machine=grafana.localhost  cpu=`LC_ALL=C top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}'`,memory=`free -m | awk '/Mem:/ { printf("%3.1f", $3/$2*100) }'`,disk=`df -h / | awk '/\// {print $(NF-1)}'|sed 's/\%//g'`"
-````
+```
 
 Then start the telegraf service
 
