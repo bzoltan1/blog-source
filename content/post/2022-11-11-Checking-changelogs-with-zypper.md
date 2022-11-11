@@ -89,5 +89,5 @@ $ zypper changelog -u
 - It is possible to see all the past contributors of a given package with this tool
 - As a single source package can provide several binary packages and each binary package will have the same changelog.
 - Be prepared for long execution time even if the connection to the remote repositories are fast.Fetching all the changelogs for openSUSE source repository may take 80-120 minutes.
-- The /var/cache/zypp/raw/[REPOSITORZY]/repodata/ directory has a *repomd.xml file what points to the *other.xml.gz file. That file is about 25MB and it contains all changelogs for all packages. Downloading and parsing these file may be more efficient when the bandwidth to the servers is low. 
+- The /var/cache/zypp/raw/[REPOSITORY]/repodata/ directory has a *repomd.xml file what points to the *other.xml.gz file. That file is about 25MB and it contains all changelogs for all packages. Downloading and parsing these file may be more efficient when the bandwidth to the servers is low. 
 - At the moment the zypper-changelog-plugin is released in openSUSE Tumbleweed but I am working on to enable it on openSUSE Leap and on the SUSE Enterprise Linux Server editions as well.
