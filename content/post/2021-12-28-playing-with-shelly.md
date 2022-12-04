@@ -79,9 +79,9 @@ First I need to set few variables
 ```bash
 $ export MQTT_SERVER="192.168.1.123"
 $ export MQTT_PORT=1883
-$ export MQTT_USER = “shelly”
-$ export MQTT_PW = “shelly”
-$ export DEVICE_ID = “ShellyBulbDuo-E8DB84A9E51B”
+$ export MQTT_USER="shelly"
+$ export MQTT_PW="shelly"
+$ export DEVICE_ID="ShellyBulbDuo-E8DB84A9E51B"
 ```
 
 ```
