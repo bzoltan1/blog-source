@@ -59,7 +59,7 @@ systemctl enable grafana-server
 
 At this point I refused to be the victim of the "everything must be configured with a web UI movement" so I have not even touched the InfluxDB web UI. Most likely this part is necessary if somebody wants to use InfluxDB for a more complex use case.  But I knew that I all need is feeding the database with simple records in time series.
 
-In the  `/etc/influxdb/config.toml` I have changed the value of auth-enabled from false to true and remove the leading # symbol from the line to uncomment the setting as shown below.
+In the `/etc/influxdb/config.toml` I have changed the value of auth-enabled from false to true and remove the leading # symbol from the line to uncomment the setting as shown below.
 
 ```
 ...
