@@ -6,7 +6,7 @@ tags: ["openSUSE","SLES","SUSE", "linux", "opens source", "osc", "Open Build Ser
 type: post
 ---
 
-From time ti time we should ask ourselves how are we doing. Are we successful, are we on the right track, are we heading to the right direction, are we fast enough, are we accelerating or slowing  down?
+From time to time we should ask ourselves how are we doing. Are we successful, are we on the right track, are we heading to the right direction, are we fast enough, are we accelerating or slowing  down?
 
 This time I am talking about the openSUSE  Linux Distribution and about the SUSE Linux Enterprise Server.
 
