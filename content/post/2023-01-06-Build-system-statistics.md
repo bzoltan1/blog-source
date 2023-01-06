@@ -85,3 +85,8 @@ The result file a long text file with the list package names and all the roles a
 For example it shows that there are 866 different individuals with either bugowner or maintainer role in the 14771 packages of the Tumbleweed Factory.
 
 There are 126 different contributors who are responsible for more than 20 packages. And the most popular first name is Stefan. Well, that is not a very valuable information. But the information of how large is the packaging community and how high load individual contributors take is a relevant one. We can and in my opinion we should work on growing this community and collaborate with those contributors who are carrying often 100+ packages on their shoulders.
+
+### Next
+
+As mentioned above mining the build system may expose interesting details about the dynamics of how packages are maintained in projects hosted by an Open Build Service but by no mean it provides full visibility on how we are doing and what should we do better.  Just recently [Martin Plskal](https://build.opensuse.org/users/mpluskal) (who is one of the undeniable star of opensSUSE contributors with 220 packages with his name as maintainer or bugowner) pointed out that actually the submitted requests of the projects [https://build.opensuse.org/project/requests/openSUSE:Factory](https://build.opensuse.org/project/requests/openSUSE:Factory) may be a more interesting place to start digging for some gold. 
+
