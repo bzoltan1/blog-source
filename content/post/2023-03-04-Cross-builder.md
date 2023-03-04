@@ -1,7 +1,7 @@
 ---
 title: "Cross build and packaging"
 subtitle: "It compiles! Ship it!"
-date: 2023-03-04T09:27:12+03:00
+date: 2023-03-04T03:27:12+03:00
 tags: ["openSUSE","SLES","SUSE", "Linux", "opens source", "zypper", "OBS", "developer tools"]
 type: post
 ---
