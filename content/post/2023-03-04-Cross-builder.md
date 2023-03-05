@@ -39,6 +39,11 @@ $ ldd /usr/bin/zypper|awk '{print $1}'|sort|uniq|xargs whereis| \
 
 The `ldd` shows what shared libraries the `/usr/bin/zypper` is linked with. The `whereis` tells us where those libraries are and `zypper se --provides --match-exact` helps us to find out what exact package provides that shared library.
 
+The next was to figure out what packages will the `rpmbuild` and `rpmspec` binaries will need. The same method does the trick again this time starting with `ldd /usr/bin/rpmbuild`
+
+One seriously annoying issue here was the `krb5`, `libzypp`, `libsolv-tools` and `zypper` packages what silently pulled a bunch of busybox-* packages and later these fake stuff did confuse important process and made me wonder for some time how to convince my chroot that grep is the real grep and not the busybox-grep. And here it is the next gallon of gasoline on the flame-war between rpm and deb because if a naive rpm package depends on a resource (like on `/usr/bin/gawk`) and not on a real package (like on the `gawk` package) then such fake package as busybox-gawk can confuse automatic deployment processes. The learning is that we should always make the dependencies clean and tidy.
+
+
 ### Building the Sysroot
 When I first started coding in grammar school, we often joked that brute force is unbeatable. While it's usually a foolish approach, but if we have the time and resources, it sure can produce results. So, when building a chroot rootfs, I used that method.
 
