@@ -81,7 +81,7 @@ To try out the tool is really simple:
 ```
 git clone https://github.com/bzoltan1/sysroot-tools.git
 cd sysroot-tools
-sudo ./sysroot create -f openSUSE-TW-x86_64-sdk.json
+sudo ./sysroot create -f openSUSE-Tumbleweed-x86_64-sdk.json
 ```
 
 Once the sysroot is created it is possible to log in to it:
