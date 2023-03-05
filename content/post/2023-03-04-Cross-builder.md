@@ -30,6 +30,15 @@ When it comes to file system isolation and confinement, nothing beats the good o
 The difference in how I approached the problem compared to existing solutions is that I wanted to control the content of the chroot. I wanted to see how small a rootfs could get while still providing nothing else but a `bash` and a fully functioning `zypper`. I checked all the dependencies of each package and their binaries with ldd to see what shared libraries they need. For a couple of hours, I was the heaviest user of the `zypper se --provides --match-exact [library]`command to see what package provides the library or whatever resource a functioning bash and zypper needs.
 
 
+The one liner what helped me to find out what are the effective dependencies of zypper was this:
+```
+$ ldd /usr/bin/zypper|awk '{print $1}'|sort|uniq|xargs whereis| \
+> awk '{print $NF}'|xargs  zypper se --provides --match-exact 2>&1| \
+> egrep -v "^S|^---|\.\.\."| sed 's/^[^|]*| *\([^| ]*\) *.*/\1/'
+```
+
+The `ldd` shows what shared libraries the `/usr/bin/zypper` is linked with. The `whereis` tells us where those libraries are and `zypper se --provides --match-exact` helps us to find out what exact package provides that shared library.
+
 ### Building the Sysroot
 When I first started coding in grammar school, we often joked that brute force is unbeatable. While it's usually a foolish approach, but if we have the time and resources, it sure can produce results. So, when building a chroot rootfs, I used that method.
 
