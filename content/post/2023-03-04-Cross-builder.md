@@ -32,12 +32,13 @@ The difference in how I approached the problem compared to existing solutions is
 
 The one liner what helped me to find out what are the effective dependencies of zypper was this:
 ```
-$ ldd /usr/bin/zypper|awk '{print $1}'|sort|uniq|xargs whereis| \
-awk '{print $NF}'|xargs  zypper se --provides --match-exact 2>&1| \
-egrep -v "^S|^---|\.\.\."| sed 's/^[^|]*| *\([^| ]*\) *.*/\1/'
+$ ldd /usr/bin/zypper|awk '{print $1}'|sort|uniq|xargs whereis|awk '{print $NF}'| \
+xargs  zypper --non-interactive --no-gpg-checks --gpg-auto-import-keys \
+se --provides --match-exact 2>&1| egrep -v "^S|^---|\.\.\."| \
+sed 's/^[^|]*| *\([^| ]*\) *.*/\1/'
 ```
 
-The `ldd` shows what shared libraries the `/usr/bin/zypper` is linked with. The `whereis` tells us where those libraries are and `zypper se --provides --match-exact` helps us to find out what exact package provides that shared library.
+The `ldd` shows what shared libraries the `/usr/bin/zypper` is linked with. The `whereis` tells us where those libraries are and `zypper --non-interactive --no-gpg-checks --gpg-auto-import-key se --provides --match-exact` helps us to find out what exact package provides that shared library.
 
 The next was to figure out what packages will the `rpmbuild` and `rpmspec` binaries will need. The same method does the trick again this time starting with `ldd /usr/bin/rpmbuild`
 
