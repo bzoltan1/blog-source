@@ -5,12 +5,14 @@ publishdir    = "public"
 theme = "beautifulhugo"
 languageCode = "en-us"
 title = "Zoltán's Blog"
-paginate = 20
 Copyright = "© Zoltán Balogh 2021"
 canonifyurls = true
 pygmentsCodeFences = true
 pygmentsUseClasses = true
 metaDataFormat = "yaml"
+
+[pagination]
+  pagerSize = 20
 
 [params]
 description = "Recorded ignorance"
@@ -23,7 +25,7 @@ linkedinName = "zbalogh"
 email = "zoltan.balogh@suse.com"
 hideHUGOSupport = false
 
-[Author]
+[params.author]
 name = "Zoltán Balogh"
 email = "zoltan.balogh@suse.com"
 github = "bzoltan1"
