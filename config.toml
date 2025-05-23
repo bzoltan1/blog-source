@@ -12,7 +12,7 @@ pygmentsUseClasses = true
 metaDataFormat = "yaml"
 
 [pagination]
-  pagerSize = 20
+pagerSize = 20
 
 [params]
 description = "Recorded ignorance"
