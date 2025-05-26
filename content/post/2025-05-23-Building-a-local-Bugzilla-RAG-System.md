@@ -55,8 +55,10 @@ The process involves:
 * Creating embeddings using `sentence-transformers`.
 * Storing them in a local Chroma vector DB.
 
-`$ pip install -U chromadb sentence-transformers langchain-community langchain-chroma langchain-huggingface langchain-ollama`
-`$ python ./index_bugs_to_chroma.py`
+```
+$ pip install -U chromadb sentence-transformers langchain-community langchain-chroma langchain-huggingface langchain-ollama
+$ python ./index_bugs_to_chroma.py
+```
 
 The code is from here: [https://github.com/bzoltan1/download-bugzilla/blob/main/index_bugs_to_chroma.py](https://github.com/bzoltan1/download-bugzilla/blob/main/index_bugs_to_chroma.py)
 
@@ -64,9 +66,11 @@ The code is from here: [https://github.com/bzoltan1/download-bugzilla/blob/main/
 
 Ollama is an easy solution with full models like Mistral, Llama3, or Phi. And Ollama is available on openSUSE Tumbleweed:
 
-`$ sudo zypper in ollama`
-`$ sudo systemctl enable ollama`
-`$ sudo systemctl start ollama`
+```
+$ sudo zypper in ollama`
+$ sudo systemctl enable ollama`
+$ sudo systemctl start ollama`
+```
 
 ## Make a Simple Query Interface (RAG Retrieval + Generation)
 
@@ -74,10 +78,12 @@ Finally, I needed a simple script that lets me ask questions in plain English ab
 
 Here is the code: [https://github.com/bzoltan1/download-bugzilla/blob/main/query_interface.py](https://github.com/bzoltan1/download-bugzilla/blob/main/query_interface.py)
 
-`$ python3.13 query_interface.py`
-`Ask a question about the Bugzilla data (Ctrl+C to exit):`
+```
+$ python3.13 query_interface.py
+Ask a question about the Bugzilla data (Ctrl+C to exit):
 
-`Prompt:`
+Prompt:
+```
 
 It works by finding the most relevant Bugzilla records using a vector search (based on meaning, not just keywords), then feeding those to a local language model (Mistral via Ollama) to generate a response.
 
