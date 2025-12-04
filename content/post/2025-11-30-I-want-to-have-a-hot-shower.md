@@ -1,7 +1,7 @@
 ---
 title : "I want to have a hot shower"
 subtitle : "From Tesseract Troubles to Local VLM"
-date : 2025-11-30T05:00:00+02:00
+date : 2025-12-04T05:00:00+02:00
 tags : ["LLM", "VLM", "Tessaract", "Ollama", "Gemini", "Home Assistant", "Shelly", "Raspberry Pi", "fswebcam", "ImageMagick", "Mosquitto", "MQTT", "openSUSE"]
 type: post
 ---
