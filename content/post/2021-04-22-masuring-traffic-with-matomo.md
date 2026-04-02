@@ -167,7 +167,7 @@ What I am not happy with is that I need to use the [https://matomo.nokedli.org/
 
 **UPDATE on 23.04**
 
-Thanks for the help of [Jan Bayer](https://github.com/baierjan) we managed to figure out what caused the problem of accessing the root of the matomo. The `.htaccess` was  unnecessary and actually the root of the application was not the root :) cause of the problem.
+Thanks for the help of [Jan Baier](https://github.com/baierjan) we managed to figure out what caused the problem of accessing the root of the matomo. The `.htaccess` was  unnecessary and actually the root of the application was not the root :) cause of the problem.
 
 The solution was to add to the VirtualHost section in the  `/etc/apache2/vhosts.d/matomo.conf` file the following section
 
