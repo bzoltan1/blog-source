@@ -52,10 +52,17 @@ I focused on packages where the work was straightforward: the tests already exis
      %{nil}
 
 +%package tests
++Summary: Installed tests for %{name}
 +Requires: gnome-desktop-testing
++
++%description tests
++Installed tests for %{name}, compatible with gnome-desktop-testing-runner.
++
++%files tests
 +%{_libexecdir}/installed-tests/%{name}/
 +%{_datadir}/installed-tests/%{name}/
 ```
+
 
 **Pattern B**: test files were already being installed but buried in `%files devel`. Moving them to a dedicated `tests` subpackage is near-zero net change.
 
@@ -135,6 +142,5 @@ The display-dependent packages already work correctly for openQA because openQA 
 
 The code is all there. The packages build. The tests pass. The next step is the submit request and the openQA integration. If you maintain any of these packages and want to pick this up, the home project is at:
 
-`https://build.opensuse.org/project/show/home:bzoltan1`
-
+[https://build.opensuse.org/project/show/home:bzoltan1](https://build.opensuse.org/project/show/home:bzoltan1)
 The spec changes are small. The upside is real: catching regressions in packages with combined hundreds of open bug reports before they reach users.
