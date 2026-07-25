@@ -26,7 +26,7 @@ Of those 63 packages that exist in both:
 - 29 have no `%check` at all, no openQA module, nothing
 - The rest are somewhere in between
 
-Out of curiosity, I also cross-referenced these packages against our Bugzilla and found about 301 matched bug reports. I want to be careful here, I am not claiming that better test coverage would have prevented all those bugs. But it is a concrete data point that there are real problems being reported against these packages. The top three are `libsoup` (100 bugs, 20 open, including two active CVEs from 2025), `pipewire` (97 bugs, 39 open, 40% open rate), and `bolt` (66 bugs).
+Out of curiosity, I also cross-referenced these packages against our Bugzilla and found about 324 matched bug reports. I want to be careful here, I am not claiming that better test coverage would have prevented all those bugs. But it is a concrete data point that there are real problems being reported against these packages. The top three are `libsoup` (100 bugs, 20 open, including two active CVEs from 2025), `pipewire` (97 bugs, 39 open, 40% open rate), and `bolt` (66 bugs).
 
 ### The missing piece
 
@@ -42,9 +42,9 @@ With that in place, the path was open for many of the listed packages.
 
 ### Enabling the tests
 
-I focused on packages where the work was straightforward: the tests already exist upstream, can run in a container without hardware or a display, and the spec change is small. The average change across the 18 packages I touched was 29 lines, -2 lines. That is it. Most packages fit one of four patterns:
+I focused on packages where the work was straightforward: the tests already exist upstream, can run in a container without hardware or a display, and the spec change is small. The average change across the 21 packages I touched was around 29 lines added, 2 lines removed. That is it. Most packages fit one or more of five patterns:
 
-**Pattern A**: the meson build already supports installed-tests, it just needed one option flipped:
+**Pattern A — flip a meson option**: the most common case. The upstream meson build already supports installed-tests but the option was disabled or missing in the spec. The option name is not standardized — it varies: `-Dinstalled_tests=true`, `-Dinstalled_tests=enabled`, `-Dinstall-tests=true`, `-Denable-installed-tests=true`, `-Dtests=true`. Check `meson_options.txt` upstream before assuming. The rest of the change is adding a `%package tests` block:
 
 ```diff
  %meson \
@@ -59,42 +59,51 @@ I focused on packages where the work was straightforward: the tests already exis
 +Installed tests for %{name}, compatible with gnome-desktop-testing-runner.
 +
 +%files tests
++%dir %{_libexecdir}/installed-tests
 +%{_libexecdir}/installed-tests/%{name}/
++%dir %{_datadir}/installed-tests
 +%{_datadir}/installed-tests/%{name}/
 ```
 
+Note: the `%dir` entries for the parent directories are required, otherwise the build fails with "directories not owned by a package".
 
-**Pattern B**: test files were already being installed but buried in `%files devel`. Moving them to a dedicated `tests` subpackage is near-zero net change.
+**Pattern B — move files already installed**: some packages were already building and installing the test binaries, but putting them in `%files devel` instead of a dedicated subpackage. `graphene`, `json-glib`, and `libxmlb` fell into this category. The change is near-zero net: remove lines from one `%files` section, add a `%package tests` block, done.
 
-**Pattern C**: GTK tests that require a display. Rather than skipping them entirely, I added wrapper scripts that check for `$DISPLAY` or `$WAYLAND_DISPLAY` and emit a proper TAP skip (`1..0 # SKIP no display available`, exit 0) when neither is set. On a desktop or in openQA, they run normally.
+**Pattern C — display-dependent tests**: GTK tests that need a display. Rather than removing them, I added a wrapper script for each `.test` file that checks `$DISPLAY` or `$WAYLAND_DISPLAY` and emits `1..0 # SKIP no display available` (exit 0) when neither is set. On a desktop session or inside openQA, which provides a virtual framebuffer, they run normally. `gspell`, `gtksourceview4`, and `gtksourceview5` use this pattern, combined with Pattern A or B.
 
-**Pattern D**: a couple of packages needed small fixes. `libfprint` generated `.test` files with hardcoded OBS build paths baked in (`/home/abuild/rpmbuild/BUILD/...`), so a sed pass in `%install` rewrites them to the correct installed paths.
+**Pattern D — fix hardcoded build paths**: meson generates `.test` metadata files at build time and bakes in the build directory path for environment variables like `G_TEST_SRCDIR` and `G_TEST_BUILDDIR`. After installation those paths no longer exist. `libfprint` had this problem, and `libxmlb` needed `G_TEST_SRCDIR` added to its `.test` file. A sed pass in `%install` rewrites the paths to the correct installed locations.
 
-The full list of improved packages, now all living in `home:bzoltan1` on `build.opensuse.org`:
+**Pattern E — autotools `check_PROGRAMS`**: `libcupsfilters` and `libppd` use autotools and their test binaries are declared as `check_PROGRAMS` — built only by `make check`, never installed by `make install`. There is an important RPM build order detail here: `%install` executes before `%check`, so the test binaries do not exist yet when `%install` runs. The fix: add `make check || :` at the end of `%build` to pre-build the test binaries, then install them explicitly from the `.libs/` subdirectory. That is where libtool places the real ELF binary — the file at the top level is a libtool shell wrapper that only works in-tree.
 
-| Package | Tests subpackage | How to run |
-|---|---|---|
-| bolt | `bolt-tests` | `gnome-desktop-testing-runner bolt` |
-| geocode-glib | `geocode-glib-tests` | `gnome-desktop-testing-runner geocode-glib-2` |
-| glib-networking | `glib-networking-tests` | `gnome-desktop-testing-runner glib-networking` |
-| graphene | `graphene-tests` | `gnome-desktop-testing-runner graphene-1.0` |
-| gspell | `gspell-tests` | `gnome-desktop-testing-runner gspell-1` |
-| gtksourceview4 | `gtksourceview4-tests` | `gnome-desktop-testing-runner gtksourceview-4` |
-| gtksourceview5 | `gtksourceview5-tests` | `gnome-desktop-testing-runner gtksourceview-5` |
-| json-glib | `json-glib-tests` | `gnome-desktop-testing-runner json-glib-1.0` |
-| libei | `libei-tests` | Direct binary execution |
-| libfprint | `libfprint-tests` | `gnome-desktop-testing-runner libfprint-2` |
-| libjcat | `libjcat-tests` | `gnome-desktop-testing-runner libjcat` |
-| libsoup (3.x) | `libsoup-tests` | `gnome-desktop-testing-runner libsoup-3.0` |
-| libsoup2 | `libsoup2-tests` | `gnome-desktop-testing-runner libsoup-2.4` |
-| libxmlb | `libxmlb-tests` | `gnome-desktop-testing-runner libxmlb` |
-| pipewire | `pipewire-tests` | `gnome-desktop-testing-runner -p 1 pipewire-0.3` |
-| samtools | `samtools-test` | `perl ./test.pl` |
-| xdg-dbus-proxy | `xdg-dbus-proxy-tests` | `gnome-desktop-testing-runner xdg-dbus-proxy` |
+The full list of improved packages, now all living in `home:bzoltan1` on `build.opensuse.org`. The pattern column refers to the descriptions above; packages can use more than one:
+
+| Package | Pattern | Tests subpackage | How to run |
+|---|---|---|---|
+| bolt | A + custom | `bolt-tests` | `gnome-desktop-testing-runner bolt` |
+| gcab | A | — (build-time only) | `%meson_test` during build |
+| geocode-glib | A | `geocode-glib-tests` | `gnome-desktop-testing-runner geocode-glib-2` |
+| glib-networking | A | `glib-networking-tests` | `gnome-desktop-testing-runner glib-networking` |
+| graphene | B | `graphene-tests` | `gnome-desktop-testing-runner graphene-1.0` |
+| gspell | B + C | `gspell-tests` | `gnome-desktop-testing-runner gspell-1` |
+| gtksourceview4 | A + C | `gtksourceview4-tests` | `gnome-desktop-testing-runner gtksourceview-4` |
+| gtksourceview5 | A + C | `gtksourceview5-tests` | `gnome-desktop-testing-runner gtksourceview-5` |
+| json-glib | B | `json-glib-tests` | `gnome-desktop-testing-runner json-glib-1.0` |
+| libei | A + custom | `libei-tests` | Direct binary execution |
+| libfprint | A + D | `libfprint-tests` | `gnome-desktop-testing-runner libfprint-2` |
+| libjcat | A | `libjcat-tests` | `gnome-desktop-testing-runner libjcat` |
+| libsoup (3.x) | A | `libsoup-tests` | `gnome-desktop-testing-runner libsoup-3.0` |
+| libsoup2 | A | `libsoup2-tests` | `gnome-desktop-testing-runner libsoup-2.4` |
+| libxmlb | B + D | `libxmlb-tests` | `gnome-desktop-testing-runner libxmlb` |
+| pipewire | A + custom | `pipewire-tests` | `gnome-desktop-testing-runner -p 1 pipewire-0.3` |
+| samtools | custom | `samtools-test` | `perl ./test.pl` |
+| xdg-dbus-proxy | A | `xdg-dbus-proxy-tests` | `gnome-desktop-testing-runner xdg-dbus-proxy` |
+| asciidoc | custom | `asciidoc-tests` | `/usr/libexec/asciidoc/test-generate-man` |
+| libcupsfilters | E | `libcupsfilters-tests` | `testdither`, `testpdf1`, `testcmyk`, `testrgb` |
+| libppd | E | `libppd-tests` | `cp -r /usr/share/ppd/testppd ppd && testppd` |
 
 ### Does it actually work?
 
-I validated all of them in a plain openSUSE Tumbleweed container on 2026-07-25. No special setup, no emulators, no display. Pull the container, install the RPMs from the home project, run the runner. Here is a representative sample:
+I validated all of them in a plain openSUSE Tumbleweed container on 2026-07-25. Here are a few examples beyond the libsoup one shown below. No special setup, no emulators, no display. Pull the container, install the RPMs from the home project, run the runner. Here is a representative sample:
 
 ```
 docker run --rm -it opensuse/tumbleweed:latest bash
@@ -115,13 +124,36 @@ gnome-desktop-testing-runner --tap gspell-1
 
 And with a display, or in openQA which provides one, they run fully.
 
-The results across all 18 packages, briefly:
+The results across all 21 packages, briefly:
 
-- **12 PASS**: tests run and pass outright (libsoup, libsoup2, json-glib, graphene, libxmlb, libjcat, geocode-glib, glib-networking, libfprint*, bolt, samtools, xdg-dbus-proxy)
+- **15 PASS**: tests run and pass outright (libsoup, libsoup2, json-glib, graphene, libxmlb, libjcat, geocode-glib, glib-networking, bolt, samtools, xdg-dbus-proxy, asciidoc, libcupsfilters, libppd, libei)
 - **3 SKIP**: tests skip gracefully without display, run fully with one (gspell, gtksourceview4, gtksourceview5)
-- **1 PASS***: pipewire: 22/25 pass, 2 hardware-dependent tests skip correctly
-- **1 PASS***: libfprint: 34/60 pass with virtual device; 26 need real fingerprint hardware
-- **1 N/A**: gcab: build-time tests only, no upstream installed-tests infrastructure
+- **1 PASS***: pipewire: 22/25 pass; 2 tests skip because they need hardware or are benchmarks, not unit tests
+- **1 PASS***: libfprint: 34/60 pass with virtual device driver; 26 need real fingerprint hardware
+- **1 build-time only**: gcab has `%check` enabled and the build-time tests pass, but upstream has no installed-tests infrastructure so there is no installable tests subpackage
+
+A few concrete examples from the three new packages:
+
+```
+testdither > /tmp/out && file /tmp/out
+/tmp/out: Netpbm image data, size = 512 x 512, rawbits, greymap
+```
+
+```
+cp -r /usr/share/ppd/testppd ppd && testppd
+ppdOpenFile("ppd/test.ppd"): PASS
+ppdMarkDefaults: PASS
+ppdEmitString (defaults): PASS
+...
+45 PASS / 0 FAIL
+```
+
+```
+/usr/libexec/asciidoc/test-generate-man
+asciidoc: All doctests passed
+OK: asciidoc internal doctest passed
+OK: asciidoc HTML generation works
+```
 
 The `*` cases are not failures. The hardware tests for libfprint require an actual fingerprint reader, which is fine, that is what openQA workers with real hardware are for. The same logic applies to pipewire's ALSA stress test.
 
