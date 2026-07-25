@@ -192,4 +192,3 @@ The code is all there. The packages build. The tests pass. The next step is ship
 [https://build.opensuse.org/project/show/home:bzoltan1](https://build.opensuse.org/project/show/home:bzoltan1)
 
 
-The spec changes are small. The upside is real.
