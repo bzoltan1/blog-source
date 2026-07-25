@@ -143,4 +143,6 @@ The display-dependent packages already work correctly for openQA because openQA 
 The code is all there. The packages build. The tests pass. The next step is the submit request and the openQA integration. If you maintain any of these packages and want to pick this up, the home project is at:
 
 [https://build.opensuse.org/project/show/home:bzoltan1](https://build.opensuse.org/project/show/home:bzoltan1)
+
+
 The spec changes are small. The upside is real: catching regressions in packages with combined hundreds of open bug reports before they reach users.
