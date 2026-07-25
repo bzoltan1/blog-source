@@ -187,7 +187,7 @@ Or actually we can use these tests in an openQA agnostic way if that is how we d
 
 The display-dependent packages already work correctly for openQA because openQA provides a virtual framebuffer. The wrappers I added are designed exactly for this: they skip in headless environments and run normally when a display is present.
 
-The code is all there. The packages build. The tests pass. The next step is the submit request and the openQA integration. If you maintain any of these packages and want to pick this up, the home project is at:
+The code is all there. The packages build. The tests pass. The next step is shipping these changes to Factory and the openQA integration. If you are interested to see how the packages look, my home project is at:
 
 [https://build.opensuse.org/project/show/home:bzoltan1](https://build.opensuse.org/project/show/home:bzoltan1)
 
