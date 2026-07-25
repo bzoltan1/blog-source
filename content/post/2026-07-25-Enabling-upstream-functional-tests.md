@@ -164,6 +164,14 @@ OK: asciidoc HTML generation works
 
 The `*` cases are not failures. The hardware tests for libfprint require an actual fingerprint reader, which is fine, that is what openQA workers with real hardware are for. The same logic applies to pipewire's ALSA stress test.
 
+### Why separating tests
+
+Test binaries belong in a dedicated subpackage for the same reason documentation belongs in a `doc` subpackage: so users who do not need them do not pay for them, and so the people who do need them can install them explicitly.
+
+Before these changes, several packages had already crossed that line in different ways. Four of them — `graphene`, `gspell`, `json-glib`, `libxmlb` — had their test binaries buried in `%files devel`. A developer pulling in headers to write code against a library does not want test executables; a QA engineer running post-install validation does not need headers. Two others — `davix`, `libppd` — shipped test binaries directly in `%{_bindir}` alongside production tools, putting executables with no end-user purpose into every installation. And `pipewire` shipped test SPA plugins inside the runtime `spa-plugins` subpackage, where the plugin scanner picks them up on every production system.
+
+A dedicated `*-tests` subpackage makes the choice explicit and opt-in. Production systems install the package. CI workers and openQA runners additionally install the tests subpackage. That is the standard model in both Fedora and Debian, and it is the reason the installed-tests infrastructure exists at all.
+
 ### Next steps
 
 The goal of this work is to get these packages into `openSUSE:Factory` via submit requests, and then add openQA modules that call `gnome-desktop-testing-runner <package>` as part of the standard test run on every Factory commit.
