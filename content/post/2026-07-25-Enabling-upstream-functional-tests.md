@@ -22,11 +22,15 @@ Of those 142 Ubuntu test packages, 79 do not even exist in openSUSE:Factory (dif
 
 Of those 63 packages that exist in both:
 
-- 5 are genuinely well covered on the SUSE side (systemd, mariadb, openvswitch, fwupd, cockpit; they have both `%check` in the spec and openQA modules)
+- 4 are genuinely well covered on the SUSE side (systemd, mariadb, openvswitch, cockpit; they have both `%check` in the spec and openQA modules)
 - 29 have no `%check` at all, no openQA module, nothing
 - The rest are somewhere in between
 
-Out of curiosity, I also cross-referenced these packages against our Bugzilla and found about 324 matched bug reports. I want to be careful here, I am not claiming that better test coverage would have prevented all those bugs. But it is a concrete data point that there are real problems being reported against these packages. The top three are `libsoup` (100 bugs, 20 open, including two active CVEs from 2025), `pipewire` (97 bugs, 39 open, 40% open rate), and `bolt` (66 bugs).
+Out of curiosity, I also cross-referenced these packages against our Bugzilla and found about 467 matched bug reports across the 24 packages I eventually improved. I want to be careful here, I am not claiming that better test coverage would have prevented all those bugs. But it is a concrete data point that there are real problems being reported against these packages. The top three are `libsoup` (100 bugs, 20 open, including two active CVEs from 2025), `pipewire` (97 bugs, 39 open, 40% open rate), and `bolt` (66 bugs).
+
+### A quick look at Fedora
+
+I also ran the same comparison against Fedora and found three more packages worth grabbing. `davix` was missed by the original Ubuntu-based analysis entirely — it has no `debian/tests/control`, so it was filtered out. But the CMake build already produces `davix-unit-tests` and `davix-tester` unconditionally; they just landed in the main package instead of a tests subpackage. No build flag changes, just a `%files` split. `evolution-data-server` simply needed `-DENABLE_INSTALLED_TESTS=ON` added to the `%cmake` call, which Fedora has had for years. And `fwupd` had a latent contradiction in the spec: `-Dtests=false` in `%build` next to `%meson_test` in `%check` — with no test targets registered, that `%meson_test` runs nothing. Changing it to `-Dtests=true` enables the full suite, including device emulation data so tests run without real hardware. All three now build in `home:bzoltan1`.
 
 ### The missing piece
 
@@ -42,7 +46,7 @@ With that in place, the path was open for many of the listed packages.
 
 ### Enabling the tests
 
-I focused on packages where the work was straightforward: the tests already exist upstream, can run in a container without hardware or a display, and the spec change is small. The average change across the 21 packages I touched was around 29 lines added, 2 lines removed. That is it. Most packages fit one or more of five patterns:
+I focused on packages where the work was straightforward: the tests already exist upstream, can run in a container without hardware or a display, and the spec change is small. The average change across the 24 packages I touched was around 29 lines added, 2 lines removed. That is it. Most packages fit one or more of five patterns:
 
 **Pattern A — flip a meson option**: the most common case. The upstream meson build already supports installed-tests but the option was disabled or missing in the spec. The option name is not standardized — it varies: `-Dinstalled_tests=true`, `-Dinstalled_tests=enabled`, `-Dinstall-tests=true`, `-Denable-installed-tests=true`, `-Dtests=true`. Check `meson_options.txt` upstream before assuming. The rest of the change is adding a `%package tests` block:
 
@@ -100,6 +104,9 @@ The full list of improved packages, now all living in `home:bzoltan1` on `build.
 | asciidoc | custom | `asciidoc-tests` | `/usr/libexec/asciidoc/test-generate-man` |
 | libcupsfilters | E | `libcupsfilters-tests` | `testdither`, `testpdf1`, `testcmyk`, `testrgb` |
 | libppd | E | `libppd-tests` | `cp -r /usr/share/ppd/testppd ppd && testppd` |
+| davix | B | `davix-tests` | `/usr/bin/davix-unit-tests` |
+| evolution-data-server | A | `evolution-data-server-tests` | `gnome-desktop-testing-runner evolution-data-server` |
+| fwupd | A | `fwupd-tests` | `gnome-desktop-testing-runner fwupd` |
 
 ### Does it actually work?
 
@@ -124,15 +131,15 @@ gnome-desktop-testing-runner --tap gspell-1
 
 And with a display, or in openQA which provides one, they run fully.
 
-The results across all 21 packages, briefly:
+The results across all 24 packages, briefly:
 
-- **15 PASS**: tests run and pass outright (libsoup, libsoup2, json-glib, graphene, libxmlb, libjcat, geocode-glib, glib-networking, bolt, samtools, xdg-dbus-proxy, asciidoc, libcupsfilters, libppd, libei)
+- **18 PASS**: tests run and pass outright (libsoup, libsoup2, json-glib, graphene, libxmlb, libjcat, geocode-glib, glib-networking, bolt, samtools, xdg-dbus-proxy, asciidoc, libcupsfilters, libppd, libei, davix, evolution-data-server, fwupd)
 - **3 SKIP**: tests skip gracefully without display, run fully with one (gspell, gtksourceview4, gtksourceview5)
 - **1 PASS***: pipewire: 22/25 pass; 2 tests skip because they need hardware or are benchmarks, not unit tests
 - **1 PASS***: libfprint: 34/60 pass with virtual device driver; 26 need real fingerprint hardware
 - **1 build-time only**: gcab has `%check` enabled and the build-time tests pass, but upstream has no installed-tests infrastructure so there is no installable tests subpackage
 
-A few concrete examples from the three new packages:
+A few concrete examples from the cups, ppd and asciidoc packages:
 
 ```
 testdither > /tmp/out && file /tmp/out
@@ -177,4 +184,4 @@ The code is all there. The packages build. The tests pass. The next step is the 
 [https://build.opensuse.org/project/show/home:bzoltan1](https://build.opensuse.org/project/show/home:bzoltan1)
 
 
-The spec changes are small. The upside is real: catching regressions in packages with combined hundreds of open bug reports before they reach users.
+The spec changes are small. The upside is real.
