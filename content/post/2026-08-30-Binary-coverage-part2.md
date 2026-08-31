@@ -13,7 +13,7 @@ The biggest limitation in the first round was daemons. Services like sshd, cups,
 
 Andrea fixed both in [BinaryCoverage PR #148](https://github.com/ilmanzo/BinaryCoverage/pull/148), released as coverage-tools 0.8.2. Signal forwarding and sd_notify relay. After that fix, sshd, tcpdump, apache, and snapper all started producing coverage data.
 
-Not everything was fixed. cups, postgresql, and rpcbind still fail with 0.8.2. The details are reported on [BinaryCoverage#143](https://github.com/ilmanzo/BinaryCoverage/issues/143). Some daemon startup sequences are more complex than the shim can handle today.
+Not everything was fixed in 0.8.2. cups, postgresql, and rpcbind still failed. Andrea followed up with coverage-tools 0.8.3, which fixed cups and rpcbind. PostgreSQL needs more startup time once instrumented but works with extended timeouts. The remaining daemon shimming issues are tracked on [BinaryCoverage#143](https://github.com/ilmanzo/BinaryCoverage/issues/143).
 
 ## Upstream contributions
 
