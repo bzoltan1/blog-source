@@ -89,6 +89,12 @@ One thing to keep in mind: for very core packages like `glibc` or `bash`, the re
 
 The next step is to actually start using it in the openSUSE and SLES maintenance update validation process. When a maintenance update comes in, the QE workflow could automatically query the reverse dependencies and pull in the relevant test packages.
 
-I also want to improve the output. Right now it prints a flat sorted list. It would be more useful to show the tree structure, with indentation showing which level each package was discovered at. And maybe a count of how many packages are in the tree, to give a quick sense of the update's blast radius.
+Since the initial release, the tool also gained a `--dot` flag that outputs a Graphviz dot file of the dependency graph. You can pipe it to `dot` to get a visual representation:
+
+```
+zypper rdepends --dot suseconnect-ng | dot -Tsvg -o rdepends.svg
+```
+
+The `--dot` flag implies `--full-tree` automatically. The root package is highlighted in the graph and all edges are shown, including cases where multiple packages depend on the same thing. This was suggested by one of the zypper developers and turned out to be a very natural fit.
 
 The code is at [https://github.com/bzoltan1/rdepends](https://github.com/bzoltan1/rdepends) and the package is on OBS at [home:bzoltan1/zypper-rdepends-plugin](https://build.opensuse.org/package/show/home:bzoltan1/zypper-rdepends-plugin).
