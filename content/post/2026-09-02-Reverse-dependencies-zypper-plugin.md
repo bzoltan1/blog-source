@@ -1,7 +1,7 @@
 ---
 title: "Reverse dependencies as a zypper plugin"
 subtitle: "From a hackweek project to a zypper subcommand"
-date: 2026-09-02T10:00:00+02:00
+date: 2026-09-02T06:52:00+02:00
 tags: ["openSUSE", "SLES", "SUSE", "Linux", "zypper", "Quality engineering"]
 type: post
 ---
