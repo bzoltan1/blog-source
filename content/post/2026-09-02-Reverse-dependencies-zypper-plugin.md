@@ -97,4 +97,8 @@ zypper rdepends --dot suseconnect-ng | dot -Tsvg -o rdepends.svg
 
 The `--dot` flag implies `--full-tree` automatically. The root package is highlighted in the graph and all edges are shown, including cases where multiple packages depend on the same thing. This was suggested by one of the zypper developers and turned out to be a very natural fit.
 
+Here is what the graph looks like for `suseconnect-ng`:
+
+![Reverse dependency graph of suseconnect-ng](/rdepends-suseconnect-ng.svg)
+
 The code is at [https://github.com/bzoltan1/rdepends](https://github.com/bzoltan1/rdepends) and the package is on OBS at [home:bzoltan1/zypper-rdepends-plugin](https://build.opensuse.org/package/show/home:bzoltan1/zypper-rdepends-plugin).
