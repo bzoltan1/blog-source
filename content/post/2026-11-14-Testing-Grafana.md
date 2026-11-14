@@ -92,9 +92,11 @@ Fedora is still better on the Fedora-specific packaging checks: full SPDX valida
 
 I could write this as a normal Perl test module. I did not. I used the openQA agnostic model.
 
-There are two reasons. The first is performance. A classic console test often talks to the SUT one command at a time. In the simplest case every assertion is a round trip over the serial console. The agnostic test runs one pytest process and writes one JUnit XML file. The whole suite took about 21 seconds in my local container.
+There are three reasons. The first is performance. A classic console test often talks to the SUT one command at a time. In the simplest case every assertion is a round trip over the serial console. The agnostic test runs one pytest process and writes one JUnit XML file. The whole suite took about 21 seconds in my local container.
 
 The second reason is portability. I want to run this test at home too, and at home I do not have openQA. The agnostic test is just Python and pytest. I can run it on any SUSE system.
+
+The third reason is validation. Because it is a normal pytest suite, I can run it against an old Grafana container and prove that it fails on a real bug. A classic openQA module would need a full openQA instance and a vulnerable SUT for that.
 
 The artifact is in `data/console/openqa_agnostic/python/testGrafana/`. There is a small wrapper in `tests/console/oqa_agnostic/grafana_agnostic.pm`. The wrapper installs `grafana`, `curl`, `nmap`, and `openssl`, then calls `agnosticTestRunner`.
 
