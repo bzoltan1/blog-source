@@ -92,7 +92,7 @@ Fedora is still better on the Fedora-specific packaging checks: full SPDX valida
 
 I could write this as a normal Perl test module. I did not. I used the openQA agnostic model.
 
-There are three reasons. The first is performance. A classic console test often talks to the SUT one command at a time. In the simplest case every assertion is a round trip over the serial console. The agnostic test runs one pytest process and writes one JUnit XML file. The whole suite took about 21 seconds in my local container.
+There are three reasons. The first is performance. A classic console test often talks to the SUT one command at a time. In the simplest case every assertion is a round trip over the serial console. The agnostic test runs one pytest process and writes one JUnit XML file. The whole suite took about 25 seconds in my local container.
 
 The second reason is portability. I want to run this test at home too, and at home I do not have openQA. The agnostic test is just Python and pytest. I can run it on any SUSE system.
 
@@ -104,17 +104,21 @@ The test restores what it changes. It restores the provisioning directory, remov
 
 The test uses the default `admin/admin` login. It does not reset the admin password. Grafana locks the account after a few failed logins, and the lockout is stored in the `login_attempt` table. It survives a service restart. I learned this the hard way during development.
 
-The PR is here: [os-autoinst/os-autoinst-distri-opensuse#27383](https://github.com/os-autoinst/os-autoinst-distri-opensuse/pull/27383). At the time I am writing this post the PR is still open. It is not reviewed and not merged yet.
+The PR is here: [os-autoinst/os-autoinst-distri-opensuse#27383](https://github.com/os-autoinst/os-autoinst-distri-opensuse/pull/27383). It has been merged.
 
 ## Does it work?
 
-I validated the full suite on a systemd-enabled Tumbleweed container with the real `grafana-12.4.11-3.1.x86_64` RPM. 21 tests passed and 1 was skipped. The skip was SELinux, because it is not enabled in the container. The run took 21 seconds.
+I validated the full suite on a systemd-enabled Tumbleweed container with the real `grafana-12.4.11-3.1.x86_64` RPM. 21 tests passed and 1 was skipped. The skip was SELinux, because it is not enabled in the container. The run took 25 seconds.
 
 On [openqa.opensuse.org](https://openqa.opensuse.org) the Tumbleweed run passed the same 21 tests and skipped SELinux in 47 seconds. The 21 tests include the systemd unit, the TLS ciphers, the user and data directory, the license, and the coredumps. The job is here: [openqa.opensuse.org/tests/6342437](https://openqa.opensuse.org/tests/6342437)
 
 The full artifact also passed on SLE 15-SP7. The module took 68 seconds on SLE 15-SP7 x86_64, 71 seconds on aarch64 and 89 seconds on s390x. It also passed on SLE 16.0 (59-62 seconds). The SLE 16.1 verification was blocked before the new module by a PackageHub registration failure. That is an SCC infrastructure problem, not the test.
 
 The existing SLES4SAP test also ran in a verification job, but it fails on an old needle: `select_grafana_left_sidebar`. It gets through install, service start, and login, and then the GUI screenshot does not match. That is a test maintenance problem for QE-SAP, not a product bug.
+
+## How much does it cover?
+
+With funkoverage, filtering to Grafana's own code leaves 35,185 of the binary's 356,647 functions. The full suite covers 5,812 of them, 16.5%. A bare start and `/api/health` already reach 12.5%, so the API, dashboard, provisioning and CVE checks add about 4 percentage points, 1,422 functions. Against the whole binary that is only 1.6%, which says more about the size of Grafana's dependency graph than about the test. The best-covered parts are setting (80%), provisioning services (65%), sqlstore (54%) and the HTTP API (22%); alerting (7%) and the IAM and dashboard apps (9-13%) are still mostly untested. The instrumented run is [openqa.opensuse.org/tests/6346389](https://openqa.opensuse.org/tests/6346389).
 
 ## Testing the test
 
@@ -139,7 +143,7 @@ The validation is container-only: bind to 127.0.0.1, use `--rm`, and the only fi
 
 ## What is next
 
-The PR needs review and merge. After that the test will run in the Tumbleweed textmode, SLE PackageHub and SLE QAM maintenance (`mau-extratests-phub`) schedules on every build where those suites run.
+The PR is merged. The test now runs in the Tumbleweed textmode schedule. After the merge I was asked to keep it Tumbleweed-only for now, so the SLE15 scheduling was removed in a quick follow-up PR (#27398). SLE can come back when QE-C/QAM agrees on the MAU scope and ownership. The SLE16 functional schedule is deferred until the PackageHub/SCC blocker is fixed, and the QAM maintenance schedules await the same QE-C/QAM agreement.
 
 The existing SLES4SAP test still needs a production job group entry. That is a separate job-group change and it needs QE-SAP sign-off. The needle also needs a refresh.
 
