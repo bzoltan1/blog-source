@@ -223,6 +223,14 @@ For the openSUSE devel projects it is different. Once the reviewer approved and 
 
 So far the hand-made freerdp and xrdp changes are accepted in Factory, the gvfs pull request is merged and its Factory request is in review, two devel-project requests from the containers are waiting for a maintainer, and the SLE plans are waiting for me. Nothing has been declined.
 
+## Proving it mattered
+
+Passing tests are not the same as useful tests. After the first packages I wanted to know whether the tests we were enabling would have caught real problems, not only whether they pass today.
+
+So I built a second job over the same list. For one package it takes a bug that was fixed later, the exact source that customers had, and the test from that source. It proves that the test existed at the time, that it fails on the affected code for the reason in the bug, and that it passes with the fix. A second model audits each case and reruns the build. A case counts only when the test was in the shipped source and the failure matches what the customer saw.
+
+The job ran over the full list. Most candidates did not survive, because there was no fixed source to compare, because the test never reaches the changed code, or because the fix arrived as part of a larger version bump. But four packages gave six proven cases. In each one the package was built green and shipped while a test that would have failed that same build was sitting in the source. The tests were not run, the build stayed green, and the bug reached customers. That is the strongest argument for this work I can give, and it is the reason I keep looking for more.
+
 ## Learnings
 
 Every run ends with a learnings file, whatever the outcome. The worker writes what is specific to the package, what is reusable for other packages, and where the prompt or a tool misled it. The orchestrator adds the parts that do not need a model, such as the rounds, the findings the reviewer marked as blockers, the commands the guard blocked, and the cost.
